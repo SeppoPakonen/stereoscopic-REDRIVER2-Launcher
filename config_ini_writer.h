@@ -18,6 +18,12 @@ struct config_data_t
 	int languageId;
 	PsyXKeyboardMapping keyboardCtrls;
 	PsyXControllerMapping controllerCtrls;
+
+	// stereo settings
+	int stereoMode { 0 };
+	int stereoSwapEyes { 0 };
+	double stereoConvergence { 0.0 };
+	double stereoSeparation { 1.0 };
 };
 
 void BestDefaultConfig(config_data_t* data);

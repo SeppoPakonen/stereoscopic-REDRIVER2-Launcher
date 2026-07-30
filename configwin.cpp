@@ -10,12 +10,26 @@ const char* LanguageList[] = {
 	"Spanish",
 };
 
+const char* StereoModeList[] = {
+	"Disabled",
+	"Anaglyph Simple",
+	"Anaglyph Full-Color",
+	"Side-by-Side",
+	"Top-and-Bottom",
+	"Interlaced Scanlines",
+	"Polarized",
+	"Checkerboard",
+};
+
 ConfigWindow::ConfigWindow()
 {
 	CtrlLayout(*this, "Configuration");
-	
+
 	for(int i = 0; i < sizeof(LanguageList) / sizeof(char*); i++)
 		languageList.Add(LanguageList[i]);
+
+	for(int i = 0; i < sizeof(StereoModeList) / sizeof(char*); i++)
+		stereoModeList.Add(StereoModeList[i]);
 	
 	finishBtn << [=] {
 			if(StoreConfig())
@@ -63,7 +77,6 @@ ConfigWindow::ConfigWindow()
 
 void ConfigWindow::LoadConfig()
 {
-	config_data_t cfgData;
 	ini_t* config;
 
 	BestDefaultConfig(&cfgData);
@@ -110,7 +123,13 @@ void ConfigWindow::LoadConfig()
 
 		ParseControllerMappings(config, "controls_game", cfgData.controllerCtrls);
 		//ParseControllerMappings(config, "controls_menu", g_gcMenuMappings);
-		
+
+		// Load stereo settings
+		ini_sget(config, "render", "stereoMode", "%d", &cfgData.stereoMode);
+		ini_sget(config, "render", "stereoSwapEyes", "%d", &cfgData.stereoSwapEyes);
+		ini_sget(config, "render", "stereoConvergence", "%lf", &cfgData.stereoConvergence);
+		ini_sget(config, "render", "stereoSeparation", "%lf", &cfgData.stereoSeparation);
+
 		ini_free(config);
 	}
 
@@ -123,7 +142,13 @@ void ConfigWindow::LoadConfig()
 	widescreenOverlaysCheck.Set(cfgData.widescreenOverlayAlign);
 	fastLoadingScreensCheck.Set(cfgData.fastLoadingScreens);
 	languageList.SetIndex(cfgData.languageId);
-	
+
+	// Load stereo settings into UI
+	stereoModeList.SetIndex(cfgData.stereoMode);
+	stereoSwapEyesCheck.Set(cfgData.stereoSwapEyes);
+	convergenceSpin <<= cfgData.stereoConvergence;
+	separationSpin <<= cfgData.stereoSeparation;
+
 	// copy controls
 	ctrlWindow.keyboardCtrls = cfgData.keyboardCtrls;
 	ctrlWindow.controllerCtrls = cfgData.controllerCtrls;
@@ -131,13 +156,10 @@ void ConfigWindow::LoadConfig()
 
 bool ConfigWindow::StoreConfig()
 {
-	config_data_t cfgData;
-	BestDefaultConfig(&cfgData);
-	
 	// copy controls
 	cfgData.keyboardCtrls = ctrlWindow.keyboardCtrls;
 	cfgData.controllerCtrls = ctrlWindow.controllerCtrls;
-	
+
 	std::string imageFilenameStr = (~imageFilenameEdit).ToStd();
 
 	cfgData.imageFilename = (char*)imageFilenameStr.c_str();
@@ -150,7 +172,13 @@ bool ConfigWindow::StoreConfig()
 	cfgData.widescreenOverlayAlign = widescreenOverlaysCheck.Get();
 	cfgData.fastLoadingScreens = fastLoadingScreensCheck.Get();
 	cfgData.languageId = languageList.GetIndex();
-	
+
+	// Store stereo settings
+	cfgData.stereoMode = stereoModeList.GetIndex();
+	cfgData.stereoSwapEyes = stereoSwapEyesCheck.Get();
+	cfgData.stereoConvergence = ~convergenceSpin;
+	cfgData.stereoSeparation = ~separationSpin;
+
 	return SaveNewConfigFile(&cfgData);
 }
 

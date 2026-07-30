@@ -47,6 +47,7 @@ public:
 protected:
 	FileSel fs;
 	ControlsWindow ctrlWindow;
+	config_data_t cfgData;
 };
 
 //------------------------
