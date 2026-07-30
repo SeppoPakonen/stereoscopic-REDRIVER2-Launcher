@@ -66,7 +66,13 @@ ConfigWindow::ConfigWindow()
 	useImageCheck.Set(0);
 	imageChooseBtn.Enable(0);
 	imageFilenameEdit.Enable(0);
-	
+
+	// Initialize stereo controls with defaults
+	stereoModeList.SetIndex(0);
+	stereoSwapEyesCheck.Set(0);
+	convergenceSpin.SetData(0.0);
+	separationSpin.SetData(1.0);
+
 	// temporarily disabled
 	//keyboardCtrlsBtn.Enable(0);
 	//joy1CtrlsBtn.Enable(0);
