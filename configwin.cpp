@@ -70,7 +70,7 @@ ConfigWindow::ConfigWindow()
 	// Initialize stereo controls with defaults
 	stereoModeList.SetIndex(0);
 	stereoSwapEyesCheck.Set(0);
-	convergenceSpin.SetData(0.0);
+	convergenceSpin.SetData(0.5);
 	separationSpin.SetData(1.0);
 
 	// temporarily disabled

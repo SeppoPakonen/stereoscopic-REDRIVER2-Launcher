@@ -138,7 +138,7 @@ void BestDefaultConfig(config_data_t* cfgData)
 	cfgData->languageId = 0;
 	cfgData->stereoMode = 0;
 	cfgData->stereoSwapEyes = 0;
-	cfgData->stereoConvergence = 0.0;
+	cfgData->stereoConvergence = 0.5;
 	cfgData->stereoSeparation = 1.0;
 	DefaultMappings(cfgData->keyboardCtrls);
 	DefaultMappings(cfgData->controllerCtrls);
